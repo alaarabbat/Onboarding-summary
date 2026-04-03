@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding One-Pager Generator · Alaa Rabbat Coaching</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --accent: #1A6FD4;
+    --blue2: #2A85E8;
+    --light-fill: #E8F1FC;
+    --pale-bg: #F4F8FE;
+    --body: #1A1A1A;
+    --mid: #4A6080;
+    --border: #D0DCF0;
+    --ui-bg: #F0F4FA;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #EAEFF8;
+    color: var(--body);
+    min-height: 100vh;
+  }
+
+  /* ── LAYOUT ── */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    grid-template-rows: 56px 1fr;
+    min-height: 100vh;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+  }
+  .topbar-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .topbar-brand span { color: var(--blue2); }
+  .topbar-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SIDEBAR FORM ── */
+  .sidebar {
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 24px 22px 40px;
+  }
+
+  .form-section {
+    margin-bottom: 28px;
+  }
+  .form-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--mid);
+    margin-bottom: 4px;
+  }
+  .field input,
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 7px 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--body);
+    background: var(--ui-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus,
+  .field textarea:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .steps-list { display: flex; flex-direction: column; gap: 8px; }
+  .step-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .step-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--light-fill);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .btn-print {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 8px;
+  }
+  .btn-print:hover { background: var(--navy); }
+
+  .btn-reset {
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    color: var(--mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.15s;
+  }
+  .btn-reset:hover { background: var(--ui-bg); }
+
+  /* ── PREVIEW PANE ── */
+  .preview-pane {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px;
+    overflow-y: auto;
+    background: #D8E2F2;
+  }
+
+  .preview-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8899BB;
+    margin-bottom: 16px;
+  }
+
+  /* ── ONE-PAGER DOCUMENT ── */
+  .one-pager {
+    width: 794px;
+    min-height: 1123px;
+    background: #fff;
+    box-shadow: 0 4px 32px rgba(13,27,42,0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--body);
+  }
+
+  /* Header */
+  .op-header {
+    background: var(--navy);
+    padding: 32px 40px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .op-header-left {}
+  .op-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 10px;
+  }
+  .op-client-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.01em;
+  }
+  .op-program-name {
+    font-size: 14px;
+    color: var(--blue2);
+    font-weight: 500;
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+  .op-header-right {
+    text-align: right;
+  }
+  .op-monogram {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.05em;
+    margin-left: auto;
+    margin-bottom: 8px;
+  }
+  .op-start-date {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+  .op-start-date strong {
+    color: rgba(255,255,255,0.85);
+    font-weight: 500;
+  }
+
+  /* Body */
+  .op-body {
+    flex: 1;
+    padding: 28px 40px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .op-section {
+    margin-bottom: 22px;
+  }
+  .op-section-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--light-fill);
+  }
+
+  /* Welcome */
+  .op-welcome-text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--mid);
+    font-style: italic;
+  }
+
+  /* Links */
+  .op-links-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .op-link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--pale-bg);
+    border-radius: 8px;
+    padding: 9px 13px;
+    text-decoration: none;
+    border: 1px solid var(--light-fill);
+  }
+  .op-link-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--light-fill);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .op-link-icon svg { width: 14px; height: 14px; }
+  .op-link-label {
+    font-size: 11px;
+    color: var(--mid);
+    line-height: 1.2;
+  }
+  .op-link-url {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+
+  /* Program overview */
+  .op-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .op-stat {
+    background: var(--pale-bg);
+    border: 1px solid var(--light-fill);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .op-stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 4px;
+  }
+  .op-stat-value {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.1;
+  }
+  .op-stat-note {
+    font-size: 11px;
+    color: var(--mid);
+    margin-top: 16px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* Next steps */
+  .op-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .op-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .op-step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .op-step-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--body);
+    padding-top: 3px;
+  }
+
+  /* Disclaimer */
+  .op-disclaimer {
+    font-size: 11px;
+    color: var(--mid);
+    line-height: 1.55;
+    padding: 12px 14px;
+    background: var(--pale-bg);
+    border-radius: 6px;
+    border-left: 3px solid var(--light-fill);
+  }
+
+  /* Footer */
+  .op-footer {
+    margin-top: auto;
+    padding: 16px 40px;
+    background: var(--navy);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .op-footer-brand {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+  .op-footer-contact {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+  }
+  .op-footer-contact a {
+    color: var(--blue2);
+    text-decoration: none;
+  }
+
+  .hidden { display: none !important; }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    body {
+      background: none;
+    }
+
+    .app-shell {
+      display: block;
+    }
+
+    .topbar,
+    .sidebar,
+    .preview-pane .preview-label {
+      display: none !important;
+    }
+
+    .preview-pane {
+      display: block;
+      padding: 0;
+      background: none;
+      overflow: visible;
+    }
+
+    .one-pager {
+      width: 100%;
+      min-height: 297mm;
+      box-shadow: none;
+      page-break-after: avoid;
+    }
+
+    .op-link-item { color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .op-stat { color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .op-header { color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .op-footer { color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-brand">Alaa Rabbat <span>Coaching</span> · www.alaarabbat.com</div>
+    <div class="topbar-meta">ONBOARDING ONE-PAGER GENERATOR</div>
+  </header>
+
+  <!-- SIDEBAR FORM -->
+  <aside class="sidebar">
+
+    <div class="form-section">
+      <div class="form-section-title">Client Info</div>
+      <div class="field">
+        <label>Client Full Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Sara Al Mansoori" oninput="render()">
+      </div>
+      <div class="field">
+        <label>Program Name</label>
+        <input type="text" id="programName" placeholder="e.g. 12-Week Transformation" oninput="render()">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Start Date</label>
+          <input type="text" id="startDate" placeholder="e.g. 7 April 2025" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Duration</label>
+          <input type="text" id="duration" placeholder="e.g. 12 Weeks" oninput="render()">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Welcome Message</div>
+      <div class="field">
+        <label>Message (leave blank to hide)</label>
+        <textarea id="welcomeMsg" placeholder="e.g. Welcome to your journey — I'm so proud of you for taking this step..." oninput="render()"></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Links & Resources</div>
+      <div class="field">
+        <label>Training Program URL</label>
+        <input type="url" id="linkTraining" placeholder="https://..." oninput="render()">
+      </div>
+      <div class="field">
+        <label>Client Portal URL</label>
+        <input type="url" id="linkPortal" placeholder="https://..." oninput="render()">
+      </div>
+      <div class="field">
+        <label>Nutrition Plan URL</label>
+        <input type="url" id="linkNutrition" placeholder="https://..." oninput="render()">
+      </div>
+      <div class="field">
+        <label>Check-in Booking URL</label>
+        <input type="url" id="linkBooking" placeholder="https://..." oninput="render()">
+      </div>
+      <div class="field">
+        <label>WhatsApp Link</label>
+        <input type="url" id="linkWhatsapp" placeholder="https://wa.me/..." oninput="render()">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Custom Label 1</label>
+          <input type="text" id="customLabel1" placeholder="e.g. Meal Tracker" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Custom URL 1</label>
+          <input type="url" id="customUrl1" placeholder="https://..." oninput="render()">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Custom Label 2</label>
+          <input type="text" id="customLabel2" placeholder="e.g. Supplement Guide" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Custom URL 2</label>
+          <input type="url" id="customUrl2" placeholder="https://..." oninput="render()">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Program Overview</div>
+      <div class="field">
+        <label>Phase</label>
+        <input type="text" id="phase" placeholder="e.g. Phase 1 — Foundation" oninput="render()">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Daily Calories</label>
+          <input type="text" id="calories" placeholder="e.g. 1,850 kcal" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Protein Target</label>
+          <input type="text" id="protein" placeholder="e.g. 150g" oninput="render()">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Training Frequency</label>
+          <input type="text" id="training" placeholder="e.g. 4x per week" oninput="render()">
+        </div>
+        <div class="field">
+          <label>Next Check-in</label>
+          <input type="text" id="checkIn" placeholder="e.g. 14 April" oninput="render()">
+        </div>
+      </div>
+      <div class="field">
+        <label>Extra Note (optional)</label>
+        <input type="text" id="overviewNote" placeholder="e.g. Focus on sleep this phase" oninput="render()">
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Next Steps (up to 6)</div>
+      <div class="steps-list">
+        <div class="step-row"><div class="step-num">1</div><input class="field" style="flex:1;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;background:#F0F4FA;border:1px solid #D0DCF0;border-radius:6px;outline:none;" type="text" id="step1" placeholder="e.g. Download your training app" oninput="render()"></div>
+        <div class="step-row"><div class="step-num">2</div><input class="field" style="flex:1;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;background:#F0F4FA;border:1px solid #D0DCF0;border-radius:6px;outline:none;" type="text" id="step2" placeholder="e.g. Log your starting weight" oninput="render()"></div>
+        <div class="step-row"><div class="step-num">3</div><input class="field" style="flex:1;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;background:#F0F4FA;border:1px solid #D0DCF0;border-radius:6px;outline:none;" type="text" id="step3" placeholder="e.g. Book your first check-in" oninput="render()"></div>
+        <div class="step-row"><div class="step-num">4</div><input class="field" style="flex:1;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;background:#F0F4FA;border:1px solid #D0DCF0;border-radius:6px;outline:none;" type="text" id="step4" placeholder="Optional" oninput="render()"></div>
+        <div class="step-row"><div class="step-num">5</div><input class="field" style="flex:1;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;background:#F0F4FA;border:1px solid #D0DCF0;border-radius:6px;outline:none;" type="text" id="step5" placeholder="Optional" oninput="render()"></div>
+        <div class="step-row"><div class="step-num">6</div><input class="field" style="flex:1;padding:7px 10px;font-family:'DM Sans',sans-serif;font-size:13px;background:#F0F4FA;border:1px solid #D0DCF0;border-radius:6px;outline:none;" type="text" id="step6" placeholder="Optional" oninput="render()"></div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Disclaimer</div>
+      <div class="field">
+        <label>Disclaimer text (leave blank to hide)</label>
+        <textarea id="disclaimer" placeholder="e.g. This plan is personalised and should not be shared. Results vary based on individual effort..." oninput="render()"></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="form-section-title">Footer Contact</div>
+      <div class="field">
+        <label>Website / Contact</label>
+        <input type="text" id="footerContact" value="www.alaarabbat.com" oninput="render()">
+      </div>
+    </div>
+
+    <button class="btn-print" onclick="window.print()">&#x2193; Save as PDF</button>
+    <button class="btn-reset" onclick="resetForm()">Clear All Fields</button>
+
+  </aside>
+
+  <!-- PREVIEW PANE -->
+  <div class="preview-pane">
+    <div class="preview-label">Live Preview — A4</div>
+
+    <div class="one-pager" id="onePager">
+
+      <!-- HEADER -->
+      <div class="op-header">
+        <div class="op-header-left">
+          <div class="op-brand">Alaa Rabbat Coaching · www.alaarabbat.com</div>
+          <div class="op-client-name" id="prev-name">Client Name</div>
+          <div class="op-program-name" id="prev-program">Program Name</div>
+        </div>
+        <div class="op-header-right">
+          <div class="op-monogram">AR</div>
+          <div class="op-start-date" id="prev-startdate" style="display:none">
+            Start: <strong id="prev-startdate-val"></strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div class="op-body">
+
+        <!-- Welcome -->
+        <div class="op-section" id="sec-welcome" style="display:none">
+          <div class="op-section-title">Welcome</div>
+          <div class="op-welcome-text" id="prev-welcome"></div>
+        </div>
+
+        <!-- Links -->
+        <div class="op-section" id="sec-links" style="display:none">
+          <div class="op-section-title">Links &amp; Resources</div>
+          <div class="op-links-grid" id="prev-links"></div>
+        </div>
+
+        <!-- Program Overview -->
+        <div class="op-section" id="sec-overview" style="display:none">
+          <div class="op-section-title">Program Overview</div>
+          <div class="op-overview-grid" id="prev-overview"></div>
+          <div class="op-stat-note" id="prev-note" style="display:none"></div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="op-section" id="sec-steps" style="display:none">
+          <div class="op-section-title">Next Steps</div>
+          <div class="op-steps-list" id="prev-steps"></div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="op-section" id="sec-disclaimer" style="display:none">
+          <div class="op-section-title">Disclaimer</div>
+          <div class="op-disclaimer" id="prev-disclaimer"></div>
+        </div>
+
+      </div>
+
+      <!-- FOOTER -->
+      <div class="op-footer">
+        <div class="op-footer-brand">Alaa Rabbat Coaching</div>
+        <div class="op-footer-contact" id="prev-footer">alaarabbat.com</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const icons = {
+    training: `<svg viewBox="0 0 16 16" fill="none" stroke="#1A6FD4" stroke-width="1.5"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M5 5V4a3 3 0 0 1 6 0v1"/><path d="M8 9v2"/></svg>`,
+    portal:   `<svg viewBox="0 0 16 16" fill="none" stroke="#1A6FD4" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2a10 10 0 0 1 0 12M8 2a10 10 0 0 0 0 12M2 8h12"/></svg>`,
+    nutrition:`<svg viewBox="0 0 16 16" fill="none" stroke="#1A6FD4" stroke-width="1.5"><path d="M8 2C5 2 3 5 3 8c0 2.76 2.24 5 5 5s5-2.24 5-5c0-3-2-6-5-6z"/><path d="M8 2v4"/></svg>`,
+    booking:  `<svg viewBox="0 0 16 16" fill="none" stroke="#1A6FD4" stroke-width="1.5"><rect x="2" y="3" width="12" height="11" rx="1"/><path d="M11 1v4M5 1v4M2 7h12"/></svg>`,
+    whatsapp: `<svg viewBox="0 0 16 16" fill="none" stroke="#1A6FD4" stroke-width="1.5"><path d="M8 2a6 6 0 0 1 5.19 9l.81 3-3-.81A6 6 0 1 1 8 2z"/><path d="M6 7.5c.5 1 1.5 2 2.5 2.5"/></svg>`,
+    custom:   `<svg viewBox="0 0 16 16" fill="none" stroke="#1A6FD4" stroke-width="1.5"><path d="M7 3H3a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9"/><path d="M10 2h4v4M14 2l-7 7"/></svg>`
+  };
+
+  function v(id) { return document.getElementById(id).value.trim(); }
+  function show(id, cond) { document.getElementById(id).style.display = cond ? '' : 'none'; }
+  function setHTML(id, html) { document.getElementById(id).innerHTML = html; }
+  function setText(id, text) { document.getElementById(id).textContent = text; }
+
+  function linkItem(label, url, iconKey) {
+    if (!url) return '';
+    const display = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    return `<a class="op-link-item" href="${url}" target="_blank">
+      <div class="op-link-icon">${icons[iconKey]}</div>
+      <div>
+        <div class="op-link-label">${label}</div>
+        <div class="op-link-url">${display}</div>
+      </div>
+    </a>`;
+  }
+
+  function statItem(label, value) {
+    if (!value) return '';
+    return `<div class="op-stat">
+      <div class="op-stat-label">${label}</div>
+      <div class="op-stat-value">${value}</div>
+    </div>`;
+  }
+
+  function render() {
+    const name = v('clientName') || 'Client Name';
+    const program = v('programName') || 'Program Name';
+    const startDate = v('startDate');
+    const welcome = v('welcomeMsg');
+    const footerContact = v('footerContact') || 'alaarabbat.com';
+
+    // Header
+    setText('prev-name', name);
+    setText('prev-program', program);
+    show('prev-startdate', !!startDate);
+    setText('prev-startdate-val', startDate);
+
+    // Footer
+    setHTML('prev-footer', `<a href="https://${footerContact}">${footerContact}</a>`);
+
+    // Welcome
+    show('sec-welcome', !!welcome);
+    setText('prev-welcome', welcome);
+
+    // Links
+    const linkRows = [
+      linkItem('Training Program', v('linkTraining'), 'training'),
+      linkItem('Client Portal', v('linkPortal'), 'portal'),
+      linkItem('Nutrition Plan', v('linkNutrition'), 'nutrition'),
+      linkItem('Check-in Booking', v('linkBooking'), 'booking'),
+      linkItem('WhatsApp', v('linkWhatsapp'), 'whatsapp'),
+    ];
+    const c1 = v('customLabel1') || 'Resource';
+    const c2 = v('customLabel2') || 'Resource';
+    if (v('customUrl1')) linkRows.push(linkItem(c1, v('customUrl1'), 'custom'));
+    if (v('customUrl2')) linkRows.push(linkItem(c2, v('customUrl2'), 'custom'));
+    const linksHTML = linkRows.join('');
+    show('sec-links', !!linksHTML);
+    setHTML('prev-links', linksHTML);
+
+    // Overview
+    const stats = [
+      statItem('Phase', v('phase')),
+      statItem('Daily Calories', v('calories')),
+      statItem('Protein Target', v('protein')),
+      statItem('Training', v('training')),
+      statItem('Next Check-in', v('checkIn')),
+    ].join('');
+    const note = v('overviewNote');
+    show('sec-overview', !!stats);
+    setHTML('prev-overview', stats);
+    show('prev-note', !!note);
+    setText('prev-note', note);
+
+    // Steps
+    const stepIds = ['step1','step2','step3','step4','step5','step6'];
+    const stepsHTML = stepIds
+      .map((id, i) => v(id) ? `<div class="op-step"><div class="op-step-num">${i+1}</div><div class="op-step-text">${v(id)}</div></div>` : '')
+      .join('');
+    show('sec-steps', !!stepsHTML);
+    setHTML('prev-steps', stepsHTML);
+
+    // Disclaimer
+    const disc = v('disclaimer');
+    show('sec-disclaimer', !!disc);
+    setText('prev-disclaimer', disc);
+  }
+
+  function resetForm() {
+    if (!confirm('Clear all fields?')) return;
+    document.querySelectorAll('input[type=text], input[type=url], textarea').forEach(el => el.value = '');
+    document.getElementById('footerContact').value = 'www.alaarabbat.com';
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>
